@@ -69,7 +69,7 @@ fn spawn_worker(tx: mpsc::Sender<Msg>, refresh: Arc<AtomicBool>) {
         let mut last: Option<(String, String)> = None;
         let mut fetched_at = Instant::now() - POLL_EVERY;
         loop {
-            let key = herdr::focused_cwd(last.is_none()).map(|cwd| {
+            let key = herdr::focused_cwd().map(|cwd| {
                 let b = gh::branch_of(&cwd).unwrap_or_default();
                 (cwd, b)
             });
@@ -346,10 +346,6 @@ fn main() -> std::io::Result<()> {
         herdr::toggle();
         return Ok(());
     }
-    if args.get(1).map(String::as_str) == Some("--fit") {
-        herdr::fit_width(herdr::target_width());
-        return Ok(());
-    }
     if args.get(1).map(String::as_str) == Some("--once") {
         once(args.get(2).map(String::as_str).unwrap_or("."));
         return Ok(());
@@ -357,7 +353,6 @@ fn main() -> std::io::Result<()> {
     let (tx, rx) = mpsc::channel();
     let refresh = Arc::new(AtomicBool::new(false));
     spawn_worker(tx, refresh.clone());
-    thread::spawn(|| herdr::fit_width(herdr::target_width()));
 
     enable_raw_mode()?;
     execute!(std::io::stdout(), EnterAlternateScreen)?;

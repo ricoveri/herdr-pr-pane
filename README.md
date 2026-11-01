@@ -7,7 +7,7 @@ pull request for the branch you're working on: status, checks and comments.
 - **Checks:** collapsible list with pass/fail/pending/skipped state.
 - **Comments:** conversation feed with `All` / `Humans` / `Bots` filters,
   folded previews you can expand.
-- Follows focus: switch to another pane or branch and the PR pane follows.
+- Shows the PR for the pane that was focused when it opened.
 - Refreshes every 45 seconds, or on demand.
 
 ## Requirements
@@ -30,8 +30,11 @@ every change. Running panes keep the old binary: close and reopen them.
 
 ## Usage
 
-Run the **Toggle PR pane** plugin action. It opens the pane to the right of the
-focused pane, or closes it if already open.
+Run the **Toggle PR pane** plugin action. It opens a popup over your layout,
+leaving your panes untouched. It is modal: close it with `q` / `Esc` to get
+back to your panes.
+
+herdr plugins can't dock a full-height sidebar yet, which is why this is a popup.
 
 | Key             | Action                         |
 |-----------------|--------------------------------|
@@ -45,8 +48,8 @@ focused pane, or closes it if already open.
 
 ## Configuration
 
-The pane is twice herdr's `ui.sidebar_width` wide (default 26, so 52 columns).
-Set an exact width with the `HERDR_PR_PANE_WIDTH` environment variable.
+The popup size is set by `width` and `height` on the `pr` pane in
+`herdr-plugin.toml` (cells or percentages, e.g. `"80%"`).
 
 ## License
 
