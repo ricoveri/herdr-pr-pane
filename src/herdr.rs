@@ -116,6 +116,7 @@ pub fn toggle() {
             let _ = Command::new(bin()).args(["pane", "close", &id]).output();
         }
         None => {
+            let target = rightmost_pane(&target).unwrap_or(target);
             let mut cmd = Command::new(bin());
             cmd.args(["plugin", "pane", "open", "--plugin", "herdr-pr-pane", "--entrypoint", "pr", "--placement", "split", "--direction", "right", "--no-focus"]);
             if !target.is_empty() {
@@ -124,4 +125,20 @@ pub fn toggle() {
             let _ = cmd.output();
         }
     }
+}
+
+/// Pane touching the tab's right edge (tallest if several), so splitting it
+/// right yields a side pane at the far right instead of mid-layout.
+fn rightmost_pane(from: &str) -> Option<String> {
+    if from.is_empty() {
+        return None;
+    }
+    let out = Command::new(bin()).args(["pane", "layout", "--pane", from]).output().ok()?;
+    let v: Value = serde_json::from_slice(&out.stdout).ok()?;
+    let panes = v["result"]["layout"]["panes"].as_array()?;
+    let n = |p: &Value, k: &str| p["rect"][k].as_i64().unwrap_or(0);
+    panes
+        .iter()
+        .max_by_key(|p| (n(p, "x") + n(p, "width"), n(p, "height")))
+        .and_then(|p| p["pane_id"].as_str().map(str::to_owned))
 }

@@ -12,7 +12,7 @@ command = ["cargo", "build", "--release"]
 [[actions]]
 id = "toggle"
 title = "Toggle PR pane"
-description = "Open the PR pane beside the focused pane, or close it if already open"
+description = "Open the PR pane at the right edge of the tab, or close it if already open"
 contexts = ["global"]
 command = ["target/release/herdr-pr-pane", "--toggle"]
 
