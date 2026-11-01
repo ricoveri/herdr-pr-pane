@@ -1,0 +1,24 @@
+id = "herdr-pr-pane"
+name = "PR Pane"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Side pane showing the focused branch's GitHub PR: status, checks and comments"
+platforms = ["macos", "linux"]
+
+# `herdr plugin link` never runs build steps: run `cargo build --release` yourself.
+[[build]]
+command = ["cargo", "build", "--release"]
+
+[[actions]]
+id = "toggle"
+title = "Toggle PR pane"
+description = "Open the PR pane beside the focused pane, or close it if already open"
+contexts = ["global"]
+command = ["target/release/herdr-pr-pane", "--toggle"]
+
+[[panes]]
+id = "pr"
+title = "PR"
+description = "PR status, checks and comments for the focused branch"
+placement = "split"
+command = ["target/release/herdr-pr-pane"]
